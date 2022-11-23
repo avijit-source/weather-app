@@ -21,7 +21,7 @@ function HourlyForecast({ hourlyForecast }) {
             <div className="container">
                 <h2 className="text-center mt-3"><u>hourly forecast</u></h2>
                 <div className="mt-3 d-flex flex-row flex-wrap justify-content-center">
-                    {hourlyForecast.slice((currPage - 1) * 2, ((currPage - 1) * 2) + 3).map((val, i) => (
+                    {hourlyForecast.slice((currPage - 1) * 3, ((currPage - 1) * 3) + 3).map((val, i) => (
                         <Card key={i} style={{ width: '20rem', marginRight: "10px", marginBottom: "15px" }}>
                             <Card.Body>
                                 <Card.Title>{val.dt_txt}</Card.Title>
