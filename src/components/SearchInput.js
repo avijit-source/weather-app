@@ -95,13 +95,60 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
         return year
     }
 
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("geolocation is not supported on this device")
+        }
+    }
+
+    async function showPosition(position) {
+        // x.innerHTML = "Latitude: " + position.coords.latitude +
+        //     "<br>Longitude: " + position.coords.longitude;
+        // console.log("api called")
+        // setCityResults(null);
+        // setCity("")
+        try {
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${process.env.REACT_APP_WEATHER_KEY}`
+            const res = await fetch(url);
+
+            const weatherData = await res.json();
+
+
+            const datetime = getTime(weatherData)
+            weatherData.datetime = datetime;
+            setWeatherData(weatherData)
+            console.log(weatherData)
+
+            const url2 = `https://api.openweathermap.org/data/2.5/forecast?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${process.env.REACT_APP_WEATHER_KEY}`
+            const res2 = await fetch(url2);
+
+            const forecast = await res2.json();
+
+
+            const list = forecast.list.map(fc => {
+                let dt = dateFormat(new Date(fc.dt_txt))
+                const year = yearFormat(new Date(fc.dt_txt))
+                const hour = hourFormat(new Date(fc.dt_txt))
+                return { ...fc, dt_txt: `${dt} ${year} ${hour}` }
+            })
+            setHourlyForecast(list)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
 
     return (
         <div className="mt-5 fluid-container">
             <h2 className="mb-4 text-center">Weather App</h2>
+            <button onClick={getLocation} className="btn btn-success">Get current location weather</button>
+            <hr />
             <InputGroup className="mb-3">
                 <Form.Control value={city} type="text" onChange={(e) => setCity(e.target.value)} width="300px" placeholder="search a place" />
                 <button onClick={handleSearch} className="btn btn-primary">search</button>
+
             </InputGroup>
 
             {cityResults && (
