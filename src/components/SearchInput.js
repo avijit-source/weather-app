@@ -97,15 +97,17 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
     }
 
     function getLocation() {
+        setLoading(true);
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
         } else {
             alert("geolocation is not supported on this device")
+            setLoading(false);
+
         }
     }
 
     async function showPosition(position) {
-        setLoading(true);
         // x.innerHTML = "Latitude: " + position.coords.latitude +
         //     "<br>Longitude: " + position.coords.longitude;
         // console.log("api called")
