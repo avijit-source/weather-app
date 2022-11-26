@@ -4,7 +4,7 @@ import Image from 'react-bootstrap/Image'
 import ListGroup from 'react-bootstrap/ListGroup';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Spinner from 'react-bootstrap/Spinner';
-
+import moment from "moment"
 
 function SearchInput({ setWeatherData, setHourlyForecast }) {
     const [cityResults, setCityResults] = useState();
@@ -35,7 +35,7 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
             const weatherData = await res.json();
 
 
-            const datetime = getTime(weatherData)
+            const datetime = getDateTime(weatherData)
             weatherData.datetime = datetime;
             setWeatherData(weatherData)
             console.log(weatherData)
@@ -47,10 +47,10 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
 
 
             const list = forecast.list.map(fc => {
-                let dt = dateFormat(new Date(fc.dt_txt))
-                const year = yearFormat(new Date(fc.dt_txt))
-                const hour = hourFormat(new Date(fc.dt_txt))
-                return { ...fc, dt_txt: `${dt} ${year} ${hour}` }
+
+
+                const datetimeformatted = moment(new Date(fc.dt_txt)).format("YYYY-MM-DD hh:mm A")
+                return { ...fc, dt_txt: datetimeformatted }
             })
             setHourlyForecast(list)
         } catch (err) {
@@ -58,43 +58,12 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
         }
     }
 
-    function getTime(data) {
-        const { timezone } = data;
+    function getDateTime(data) {
         const { dt } = data;
-        const dateTime = new Date(dt * 1000);
-        const toUtc = dateTime.getTime() + dateTime.getTimezoneOffset() * 60000;
-        const currentLocalTime = toUtc + 1000 * timezone;
-        const selectedDate = new Date(currentLocalTime);
-        const date = dateFormat(selectedDate)
-        const year = yearFormat(selectedDate)
-        const hour = hourFormat(selectedDate)
-        return `${date} ${year} ${hour}`; //Thursday, 21 July 2022 18:14
+        return moment(new Date((dt * 1000))).format("YYYY-MM-DD hh:mm A")
     }
 
-    function dateFormat(d) {
-        const newDate = d.toLocaleString("en-IN", {
-            day: "numeric",
-            weekday: "long",
-            month: "long",
-        });
-        return newDate
-    }
 
-    function hourFormat(d) {
-        const hour = d.toLocaleString("en-IN", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-        });
-        return hour
-    }
-
-    function yearFormat(d) {
-        const year = d.toLocaleString("en-IN", {
-            year: "numeric",
-        });
-        return year
-    }
 
     function getLocation() {
         setLoading(true);
@@ -108,11 +77,7 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
     }
 
     async function showPosition(position) {
-        // x.innerHTML = "Latitude: " + position.coords.latitude +
-        //     "<br>Longitude: " + position.coords.longitude;
-        // console.log("api called")
-        // setCityResults(null);
-        // setCity("")
+
         try {
             const url = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${process.env.REACT_APP_WEATHER_KEY}`
             const res = await fetch(url);
@@ -120,7 +85,7 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
             const weatherData = await res.json();
 
 
-            const datetime = getTime(weatherData)
+            const datetime = getDateTime(weatherData)
             weatherData.datetime = datetime;
             setWeatherData(weatherData)
             console.log(weatherData)
@@ -132,10 +97,9 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
 
 
             const list = forecast.list.map(fc => {
-                let dt = dateFormat(new Date(fc.dt_txt))
-                const year = yearFormat(new Date(fc.dt_txt))
-                const hour = hourFormat(new Date(fc.dt_txt))
-                return { ...fc, dt_txt: `${dt} ${year} ${hour}` }
+                let dt = moment(new Date(fc.dt_txt)).format("YYYY-MM-DD hh:mm A")
+
+                return { ...fc, dt_txt: dt }
             })
             setHourlyForecast(list)
             setLoading(false)
