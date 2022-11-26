@@ -50,7 +50,9 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
 
 
                 const datetimeformatted = moment(new Date(fc.dt_txt)).format("YYYY-MM-DD hh:mm A")
-                return { ...fc, dt_txt: datetimeformatted }
+                const day = moment(new Date(fc.dt_txt)).format("dddd")
+
+                return { ...fc, dt_txt: datetimeformatted + ` ${day}` }
             })
             setHourlyForecast(list)
         } catch (err) {
@@ -60,7 +62,8 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
 
     function getDateTime(data) {
         const { dt } = data;
-        return moment(new Date((dt * 1000))).format("YYYY-MM-DD hh:mm A")
+        const day = moment(new Date((dt * 1000))).format("dddd")
+        return moment(new Date((dt * 1000))).format("YYYY-MM-DD hh:mm A") + ` ${day}`
     }
 
 
@@ -98,8 +101,8 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
 
             const list = forecast.list.map(fc => {
                 let dt = moment(new Date(fc.dt_txt)).format("YYYY-MM-DD hh:mm A")
-
-                return { ...fc, dt_txt: dt }
+                const day = moment(new Date(fc.dt_txt)).format("dddd")
+                return { ...fc, dt_txt: dt + ` ${day}` }
             })
             setHourlyForecast(list)
             setLoading(false)
