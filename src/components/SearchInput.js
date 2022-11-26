@@ -3,12 +3,13 @@ import Form from 'react-bootstrap/Form';
 import Image from 'react-bootstrap/Image'
 import ListGroup from 'react-bootstrap/ListGroup';
 import InputGroup from 'react-bootstrap/InputGroup';
+import Spinner from 'react-bootstrap/Spinner';
 
 
 function SearchInput({ setWeatherData, setHourlyForecast }) {
     const [cityResults, setCityResults] = useState();
     const [city, setCity] = useState("");
-
+    const [loading, setLoading] = useState(false)
 
 
     const handleSearch = async () => {
@@ -104,6 +105,7 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
     }
 
     async function showPosition(position) {
+        setLoading(true);
         // x.innerHTML = "Latitude: " + position.coords.latitude +
         //     "<br>Longitude: " + position.coords.longitude;
         // console.log("api called")
@@ -134,12 +136,18 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
                 return { ...fc, dt_txt: `${dt} ${year} ${hour}` }
             })
             setHourlyForecast(list)
+            setLoading(false)
         } catch (err) {
             console.log(err)
+            setLoading(false)
         }
     }
 
-
+    if (loading === true) {
+        return (
+            <Spinner className="mt-4" animation="grow" />
+        )
+    }
     return (
         <div className="mt-5 fluid-container">
             <h2 className="mb-4 text-center">Weather App</h2>
