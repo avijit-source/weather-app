@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Card from 'react-bootstrap/Card';
 import Pagination from 'react-bootstrap/Pagination';
+import Badge from 'react-bootstrap/Badge';
 
 
 function HourlyForecast({ hourlyForecast }) {
@@ -24,8 +25,12 @@ function HourlyForecast({ hourlyForecast }) {
                     {hourlyForecast.slice((currPage - 1) * 3, ((currPage - 1) * 3) + 3).map((val, i) => (
                         <Card key={i} style={{ width: '20rem', marginRight: "10px", marginBottom: "15px" }}>
                             <Card.Body>
-                                <Card.Title>{val.dt_txt}</Card.Title>
-                                <Card.Title>Description: {val.weather[0].description}</Card.Title>
+                                <Card.Title><Badge bg="dark">
+                                    {val.dt_txt}
+                                </Badge></Card.Title>
+                                <Card.Title><Badge bg="dark">
+                                    Description: {val.weather[0].description}
+                                </Badge></Card.Title>
                                 <Card.Title>Temperature: <span style={{
                                     color: Number(val.main.temp) - 273.15 > 35 ? "red" : (Number(val.main.temp) - 273.15 > 25) ? "orange" : "blue"
                                 }}>{Math.floor(((Number(val.main.temp) - 273.15) * (9 / 5)) + 32)}°F <span style={{ color: "black" }}>or</span> {Math.round((Number(val.main.temp) - 273.15))}°C</span></Card.Title>

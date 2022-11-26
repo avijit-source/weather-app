@@ -1,6 +1,7 @@
 import React from 'react'
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image'
+import Badge from 'react-bootstrap/Badge';
 
 function WeatherDetails({ weatherData }) {
 
@@ -12,8 +13,12 @@ function WeatherDetails({ weatherData }) {
                 <Card.Title>{weatherData.name}
                     <Image className="me-2" src={`https://countryflagsapi.com/png/${weatherData.sys.country}`} thumbnail width={50} height={50} />
                 </Card.Title>
-                <Card.Title>{weatherData.datetime.toLocaleString()}</Card.Title>
-                <Card.Title>Description: {weatherData.weather[0].description}</Card.Title>
+                <Card.Title><Badge bg="dark">
+                    {weatherData.datetime}
+                </Badge></Card.Title>
+                <Card.Title><Badge bg="dark">
+                    Description: {weatherData.weather[0].description}
+                </Badge></Card.Title>
 
                 <Card.Title>Temperature: <span style={{
                     color: Number(weatherData.main.temp) - 273.15 > 35 ? "red" : (Number(weatherData.main.temp) - 273.15 > 25) ? "orange" : "blue"
