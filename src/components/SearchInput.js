@@ -7,12 +7,21 @@ import Spinner from 'react-bootstrap/Spinner';
 import moment from "moment"
 
 function SearchInput({ setWeatherData, setHourlyForecast }) {
+    // state for holding city search results from api which contains lat and lon of each city object
     const [cityResults, setCityResults] = useState();
+
+    // state for holding city value typed by user
     const [city, setCity] = useState("");
+
+    // state for loading while api is calling
     const [loading, setLoading] = useState(false)
 
-
+    // when user clicks 
     const handleSearch = async () => {
+        if (!city) {
+            alert("Please enter a city");
+            return false;
+        }
         console.log("api called")
         const geocodingurl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${process.env.REACT_APP_WEATHER_KEY}`
         try {
@@ -33,6 +42,8 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
             const res = await fetch(url);
 
             const weatherData = await res.json();
+
+
 
 
             const datetime = getDateTime(weatherData)
@@ -82,7 +93,7 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
     async function showPosition(position) {
 
         try {
-            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${process.env.REACT_APP_WEATHER_KEY}`
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${`${Number(position.coords.latitude).toFixed(2)}`}&lon=${`${Number(position.coords.longitude.toFixed(2))}`}&appid=${process.env.REACT_APP_WEATHER_KEY}`
             const res = await fetch(url);
 
             const weatherData = await res.json();
@@ -93,7 +104,7 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
             setWeatherData(weatherData)
             console.log(weatherData)
 
-            const url2 = `https://api.openweathermap.org/data/2.5/forecast?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${process.env.REACT_APP_WEATHER_KEY}`
+            const url2 = `https://api.openweathermap.org/data/2.5/forecast?lat=${`${Number(position.coords.latitude).toFixed(2)}`}&lon=${`${Number(position.coords.longitude.toFixed(2))}`}&appid=${process.env.REACT_APP_WEATHER_KEY}`
             const res2 = await fetch(url2);
 
             const forecast = await res2.json();
@@ -125,7 +136,6 @@ function SearchInput({ setWeatherData, setHourlyForecast }) {
             <InputGroup className="mb-3">
                 <Form.Control value={city} type="text" onChange={(e) => setCity(e.target.value)} width="300px" placeholder="search a place" />
                 <button onClick={handleSearch} className="btn btn-primary">search</button>
-
             </InputGroup>
 
             {cityResults && (

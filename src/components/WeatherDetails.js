@@ -6,6 +6,7 @@ import Badge from 'react-bootstrap/Badge';
 function WeatherDetails({ weatherData }) {
 
 
+
     return (
         <Card className='mt-3' style={{ width: '20rem' }}>
 
@@ -38,5 +39,7 @@ function WeatherDetails({ weatherData }) {
         </Card>
     )
 }
+
+
 
 export default WeatherDetails
